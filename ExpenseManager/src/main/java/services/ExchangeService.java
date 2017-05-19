@@ -1,14 +1,16 @@
 package services;
 
-import java.util.Date;
 import java.util.Map;
 
 public class ExchangeService {
     private String base;
-    private Date date;
+    private String date;
     private Map<String, Double> rates;
 
     public Double getRate(String key){
+        if (!rates.containsKey(key)){
+            return -1d;
+        }
         return rates.get(key);
     }
 
@@ -20,11 +22,11 @@ public class ExchangeService {
         this.base = base;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

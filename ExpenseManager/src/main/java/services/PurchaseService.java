@@ -3,6 +3,7 @@ package services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Purchase;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,26 +11,33 @@ import java.util.Collections;
 public class PurchaseService {
     private ArrayList<Purchase> list = new ArrayList<Purchase>();
 
-    private ObjectMapper mapper;
-    private ExchangeService service;
+    private ExchangeService exchangeService;
 
-    public PurchaseService() throws Exception{
-        mapper = new ObjectMapper();
-        service = mapper.readValue(new URL("http://api.fixer.io/latest?base=EUR"), ExchangeService.class);
+    public PurchaseService() throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        exchangeService = mapper.readValue(new URL("http://api.fixer.io/latest?base=EUR"), ExchangeService.class);
     }
 
-    void add(Purchase purchase){
+    public ArrayList<Purchase> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<Purchase> list) {
+        this.list = list;
+    }
+
+    public void add(Purchase purchase){
         if (purchase.getCurrency().equals("EUR")){
             purchase.setPriceInEur(purchase.getPrice());
         } else {
-            double eurRate = service.getRate(purchase.getCurrency());
+            double eurRate = exchangeService.getRate(purchase.getCurrency());
             purchase.setPriceInEur(purchase.getPrice() / eurRate);
         }
 
         list.add(purchase);
     }
 
-    void deleteByDate(String date){
+    public void deleteByDate(String date){
         ArrayList<Purchase> deleteCandidates = new ArrayList<Purchase>();
 
         for (Purchase purchase : list) {
@@ -42,7 +50,9 @@ public class PurchaseService {
         }
     }
 
-    void printPurchaseList(){
+    public void printSortedPurchaseList(){
+        Collections.sort(list);
+
         ArrayList<String> dates = new ArrayList<String>();
         for (Purchase purchase : list) {
             if (!dates.contains(purchase.getDate())){
@@ -62,18 +72,14 @@ public class PurchaseService {
         }
     }
 
-    void sortPurchaseListByDate(){
-        Collections.sort(list);
-    }
-
-    void getTotal(String currency){
+    public void getTotal(String currency){
         double eurSum = 0;
         for (Purchase purchase : list) {
             eurSum += purchase.getPriceInEur();
         }
 
         if (!currency.equals("EUR")){
-            System.out.println(String.format("%.2f %s", eurSum * service.getRate(currency), currency));
+            System.out.println(String.format("%.2f %s", eurSum * exchangeService.getRate(currency), currency));
         } else {
             System.out.println(String.format("%.2f EUR", eurSum));
         }
