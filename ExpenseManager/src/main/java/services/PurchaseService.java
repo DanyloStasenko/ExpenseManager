@@ -9,21 +9,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class PurchaseService {
-    private ArrayList<Purchase> list = new ArrayList<Purchase>();
 
     private ExchangeService exchangeService;
+
+    private ArrayList<Purchase> purchases = new ArrayList<>();
 
     public PurchaseService() throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         exchangeService = mapper.readValue(new URL("http://api.fixer.io/latest?base=EUR"), ExchangeService.class);
     }
 
-    public ArrayList<Purchase> getList() {
-        return list;
+    public ArrayList<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setList(ArrayList<Purchase> list) {
-        this.list = list;
+    public void setPurchases(ArrayList<Purchase> purchases) {
+        this.purchases = purchases;
     }
 
     public void add(Purchase purchase){
@@ -34,47 +35,32 @@ public class PurchaseService {
             purchase.setPriceInEur(purchase.getPrice() / eurRate);
         }
 
-        list.add(purchase);
+        purchases.add(purchase);
     }
 
     public void deleteByDate(String date){
-        ArrayList<Purchase> deleteCandidates = new ArrayList<Purchase>();
-
-        for (Purchase purchase : list) {
-            if (purchase.getDate().equals(date)){
-                deleteCandidates.add(purchase);
-            }
-        }
-        for (Purchase deleteCandidate : deleteCandidates) {
-            list.remove(deleteCandidate);
-        }
+        purchases.removeIf(purchase -> purchase.getDate().equals(date));
     }
 
-    public void printSortedPurchaseList(){
-        Collections.sort(list);
+    public void printSortedList(){
+        Collections.sort(purchases);
 
-        ArrayList<String> dates = new ArrayList<String>();
-        for (Purchase purchase : list) {
-            if (!dates.contains(purchase.getDate())){
-                dates.add(purchase.getDate());
-            }
-        }
+        ArrayList<String> dates = new ArrayList<>();
+        purchases.stream().filter(purchase -> !dates.contains(purchase.getDate())).forEach(purchase -> dates.add(purchase.getDate()));
 
         for (String date : dates) {
             System.out.println();
             System.out.println(date);
-            for (Purchase purchase : list) {
-                if (date.equals(purchase.getDate())){
-                    System.out.println(String.format("%s %.2f %s", purchase.getTittle(), purchase.getPrice(), purchase.getCurrency()));
-
-                }
-            }
+            purchases.stream().filter(purchase -> date.equals(purchase.getDate())).
+                    forEach(purchase -> System.out.println(String.format("%s %.2f %s",
+                            purchase.getTittle(), purchase.getPrice(), purchase.getCurrency())));
         }
+        System.out.println();
     }
 
     public void getTotal(String currency){
         double eurSum = 0;
-        for (Purchase purchase : list) {
+        for (Purchase purchase : purchases) {
             eurSum += purchase.getPriceInEur();
         }
 
@@ -83,5 +69,6 @@ public class PurchaseService {
         } else {
             System.out.println(String.format("%.2f EUR", eurSum));
         }
+        System.out.println();
     }
 }

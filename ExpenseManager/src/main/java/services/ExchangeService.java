@@ -1,11 +1,16 @@
 package services;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ExchangeService {
-    private String base;
-    private String date;
-    private Map<String, Double> rates;
+    private String base = "EUR";
+    private String date = "2017-05-20";
+    private HashMap<String, Double> rates;
+
+    public void addRate(String currency, Double rate){
+        rates.put(currency, rate);
+    }
 
     public Double getRate(String key){
         if (!rates.containsKey(key)){
@@ -34,7 +39,7 @@ public class ExchangeService {
         return rates;
     }
 
-    public void setRates(Map<String, Double> rates) {
+    public void setRates(HashMap<String, Double> rates) {
         this.rates = rates;
     }
 

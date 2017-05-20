@@ -15,7 +15,7 @@ public class PurchaseServiceTest {
         purchaseService.add(new Purchase("2017-04-25", 2d, "EUR", "Jogurt"));
         purchaseService.add(new Purchase("2017-04-26", 4d, "EUR", "Apple"));
 
-        assertEquals(2, purchaseService.getList().size());
+        assertEquals(2, purchaseService.getPurchases().size());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class PurchaseServiceTest {
         list.add(new Purchase("2017-04-26", 4d, "EUR", "Apple"));
 
         PurchaseService purchaseService = new PurchaseService();
-        purchaseService.setList(list);
+        purchaseService.setPurchases(list);
     }
 
     @Test
@@ -45,12 +45,12 @@ public class PurchaseServiceTest {
         list.add(new Purchase("2017-04-27", 4d, "EUR", "Apple"));
 
         PurchaseService purchaseService = new PurchaseService();
-        purchaseService.setList(list);
+        purchaseService.setPurchases(list);
 
-        assertEquals(6, purchaseService.getList().size(), 0);
+        assertEquals(6, purchaseService.getPurchases().size(), 0);
 
         purchaseService.deleteByDate("2017-04-25");
-        assertEquals(2, purchaseService.getList().size(), 0);
+        assertEquals(2, purchaseService.getPurchases().size(), 0);
     }
 
     @Test

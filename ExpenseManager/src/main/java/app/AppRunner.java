@@ -12,35 +12,40 @@ public class AppRunner {
 
         PurchaseService purchaseService = new PurchaseService();
 
-        while (true){
+        boolean exit = false;
+        while (!exit) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String inputLine = reader.readLine();
 
             String[] inputValues = inputLine.split(" ", 5);
             String command = inputValues[0];
 
-            if (command.equals("add")){
-                Purchase purchase = new Purchase(inputValues[1], Double.parseDouble(inputValues[2]), inputValues[3], inputValues[4]);
+            switch (command) {
+                case "add":
+                    Purchase purchase = new Purchase(inputValues[1], Double.parseDouble(inputValues[2]), inputValues[3], inputValues[4]);
+                    purchaseService.add(purchase);
+                    purchaseService.printSortedList();
+                    break;
 
-                purchaseService.add(purchase);
-                purchaseService.printSortedPurchaseList();
-            }
+                case "list":
+                    purchaseService.printSortedList();
+                    break;
 
-            if (command.equals("list")){
-                purchaseService.printSortedPurchaseList();
-            }
+                case "clear":
+                    purchaseService.deleteByDate(inputValues[1]);
+                    purchaseService.printSortedList();
+                    break;
 
-            if (command.equals("clear")){
-                purchaseService.deleteByDate(inputValues[1]);
-                purchaseService.printSortedPurchaseList();
-            }
+                case "total":
+                    purchaseService.getTotal(inputValues[1]);
+                    break;
 
-            if (command.equals("total")){
-                purchaseService.getTotal(inputValues[1]);
-            }
+                case "exit":
+                    exit = true;
+                    break;
 
-            if (command.equals("exit")){
-                break;
+                default:
+                    System.err.println("Unrecognized command: " + command);
             }
         }
     }
