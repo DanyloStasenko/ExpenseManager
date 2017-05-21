@@ -10,7 +10,7 @@ public class Purchase implements Comparable<Purchase> {
 
     public Purchase(String date, double price, String currency, String tittle) {
         this.date = date;
-        this.price = price;
+        this.setPrice(price);
         this.currency = currency;
         this.tittle = tittle;
     }
@@ -28,7 +28,11 @@ public class Purchase implements Comparable<Purchase> {
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        if (price > 0){
+            this.price = price;
+        } else {
+            throw new RuntimeException("Price must be greater than 0!");
+        }
     }
 
     public String getCurrency() {

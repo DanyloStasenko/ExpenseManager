@@ -1,22 +1,18 @@
 package services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Purchase;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class PurchaseService {
 
     private ExchangeService exchangeService;
-
     private ArrayList<Purchase> purchases = new ArrayList<>();
 
     public PurchaseService() throws IOException{
-        ObjectMapper mapper = new ObjectMapper();
-        exchangeService = mapper.readValue(new URL("http://api.fixer.io/latest?base=EUR"), ExchangeService.class);
+        exchangeService = ExchangeService.createInstance();
     }
 
     public ArrayList<Purchase> getPurchases() {
@@ -43,6 +39,7 @@ public class PurchaseService {
     }
 
     public void printSortedList(){
+        // Sorting by Date
         Collections.sort(purchases);
 
         ArrayList<String> dates = new ArrayList<>();
@@ -55,10 +52,9 @@ public class PurchaseService {
                     forEach(purchase -> System.out.println(String.format("%s %.2f %s",
                             purchase.getTittle(), purchase.getPrice(), purchase.getCurrency())));
         }
-        System.out.println();
     }
 
-    public void getTotal(String currency){
+    public void printTotal(String currency){
         double eurSum = 0;
         for (Purchase purchase : purchases) {
             eurSum += purchase.getPriceInEur();
@@ -71,4 +67,5 @@ public class PurchaseService {
         }
         System.out.println();
     }
+
 }

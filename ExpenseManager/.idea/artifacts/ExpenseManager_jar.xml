@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="ExpenseManager:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ExpenseManager_jar</output-path>
+    <root id="root">
+      <element id="archive" name="ExpenseManager.jar">
+        <element id="module-output" name="ExpenseManager" />
+      </element>
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.4.4" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.4" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" />
+      <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.0" />
+      <element id="library" level="module" name="JUnit4" module-name="ExpenseManager" />
+    </root>
+  </artifact>
+</component>

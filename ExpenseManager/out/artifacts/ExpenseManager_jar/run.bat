@@ -1,0 +1,1 @@
+java -cp ExpenseManager.jar app.AppRunner

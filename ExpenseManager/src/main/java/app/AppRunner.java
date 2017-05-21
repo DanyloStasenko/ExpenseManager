@@ -14,15 +14,23 @@ public class AppRunner {
 
         boolean exit = false;
         while (!exit) {
+            System.out.println();
+            System.out.print(">\t");
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String inputLine = reader.readLine();
 
+            // Getting values from inputLine: [1]command, [2]date, [3]price, [4]currency, [5]title
             String[] inputValues = inputLine.split(" ", 5);
             String command = inputValues[0];
 
             switch (command) {
                 case "add":
-                    Purchase purchase = new Purchase(inputValues[1], Double.parseDouble(inputValues[2]), inputValues[3], inputValues[4]);
+                    String date = inputValues[1];
+                    double price = Double.parseDouble(inputValues[2]);
+                    String currency = inputValues[3].toUpperCase();
+                    String title = inputValues[4];
+
+                    Purchase purchase = new Purchase(date, price, currency, title);
                     purchaseService.add(purchase);
                     purchaseService.printSortedList();
                     break;
@@ -37,7 +45,7 @@ public class AppRunner {
                     break;
 
                 case "total":
-                    purchaseService.getTotal(inputValues[1]);
+                    purchaseService.printTotal(inputValues[1].toUpperCase());
                     break;
 
                 case "exit":
@@ -50,15 +58,3 @@ public class AppRunner {
         }
     }
 }
-
-/*
-Testing:
-add 2017-04-25 2 USD Jogurt
-add 2017-04-25 3 EUR “French fries”
-add 2017-04-25 2000 PLN Car
-add 2017-04-26 2000 USD Something
-total USD
-clear 2017-04-25
-add 2017-04-26 2000 USD Something
-total EUR
-*/

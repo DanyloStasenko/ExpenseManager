@@ -1,22 +1,27 @@
 package services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ExchangeService {
-    private String base = "EUR";
-    private String date = "2017-05-20";
+
+    private String base;
+    private String date;
     private HashMap<String, Double> rates;
 
-    public void addRate(String currency, Double rate){
-        rates.put(currency, rate);
+    public static ExchangeService createInstance() throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(new URL("http://api.fixer.io/latest?base=EUR"), ExchangeService.class);
     }
 
-    public Double getRate(String key){
-        if (!rates.containsKey(key)){
+    public Double getRate(String currency){
+        if (!rates.containsKey(currency)){
             return -1d;
         }
-        return rates.get(key);
+        return rates.get(currency);
     }
 
     public String getBase() {
@@ -35,7 +40,7 @@ public class ExchangeService {
         this.date = date;
     }
 
-    public Map<String, Double> getRates() {
+    public HashMap<String, Double> getRates() {
         return rates;
     }
 
